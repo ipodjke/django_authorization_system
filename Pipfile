@@ -6,11 +6,14 @@ name = "pypi"
 [packages]
 django = "*"
 djangorestframework = "*"
-environs = "*"
 psycopg2-binary = "*"
 django-filter = "*"
 pillow = "*"
 gunicorn = "*"
+python-decouple = "*"
+djangorestframework-simplejwt = "*"
+rest-social-auth = "*"
+django-rest-framework-social-oauth2 = "*"
 
 [dev-packages]
 flake8 = "*"

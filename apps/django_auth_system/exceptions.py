@@ -1,0 +1,2 @@
+class HaveNoRequiredFileds(Exception):
+    pass

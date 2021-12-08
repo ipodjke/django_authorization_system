@@ -1,25 +1,27 @@
 import os
 
+from decouple import Csv, config
+
 from .base import *
 
-DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = config('DEBUG', default=0, cast=lambda x: int(x))
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '0.0.0.0').split()
+ALLOWED_HOSTS = config('DJANGO_ALLOWED_HOSTS', cast=Csv())
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get(
+        'ENGINE': config(
             'SQL_ENGINE',
-            'django.db.backends.sqlite3'
+            default='django.db.backends.sqlite3'
         ),
-        'NAME': os.environ.get(
+        'NAME': config(
             'SQL_DATABASE',
-            os.path.join(BASE_DIR, 'db.sqlite3')
+            default=os.path.join(BASE_DIR, 'db.sqlite3')
         ),
-        'USER': os.environ.get('SQL_USER', 'user'),
-        'PASSWORD': os.environ.get('SQL_PASSWORD', 'password'),
-        'HOST': os.environ.get('SQL_HOST', 'localhost'),
-        'PORT': os.environ.get('SQL_PORT', '5432'),
+        'USER': config('SQL_USER', default='user'),
+        'PASSWORD': config('SQL_PASSWORD', default='password'),
+        'HOST': config('SQL_HOST', default='localhost'),
+        'PORT': config('SQL_PORT', default='5432'),
     }
 }
 

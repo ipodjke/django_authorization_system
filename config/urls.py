@@ -9,6 +9,7 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('django_auth_system.urls')),
 ]
 
 if settings.DEBUG:

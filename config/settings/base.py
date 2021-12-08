@@ -2,12 +2,14 @@ import os
 import sys
 from pathlib import Path
 
+from decouple import config
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 APPS_DIR = os.path.join(BASE_DIR, './apps')
 sys.path.insert(0, APPS_DIR)
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY')
 if SECRET_KEY is None:
     raise Exception('Не найден SECRET_KEY')
 
@@ -20,7 +22,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'rest_framework',
-    'users',
+    'rest_framework_simplejwt',
+    'django_auth_system',
+    'oauth2_provider',
+    'social_django',
+    'rest_framework_social_oauth2',
+    # 'rest_social_auth'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +54,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -91,4 +100,48 @@ SITE_ID = 1
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'django_auth_system.User'
+
+# DJANGO_AUTH_SYSTEM = {
+#     'USER_MODEL_SCHEMA': {
+#         'USERNAME_FIELD': 'username',
+#         'REQUIRED_FIELDS': [],
+#         # 'META': {
+#         #   'key': 'value',
+#         # }
+#         'FIELDS': {
+#             'username': {
+#                 'field_type': 'CharField',
+#                 'attrs': {
+#                     'max_length': 150,
+#                     'unique': True
+#                 }
+#             },
+#             'email': {
+#                 'field_type': 'EmailField',
+#                 'attrs': {
+#                     'blank': True
+#                 }
+#             },
+#         }
+#     },
+# }
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = config('SOCIAL_AUTH_VK_OAUTH2_KEY')
+SOCIAL_AUTH_VK_OAUTH2_SECRET = config('SOCIAL_AUTH_VK_OAUTH2_SECRET')
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+REST_SOCIAL_DOMAIN_FROM_ORIGIN = False
+REST_SOCIAL_OAUTH_REDIRECT_URI = '/login/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+    ),
+}

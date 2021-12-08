@@ -20,8 +20,6 @@ python -c "import django; django.setup(); \
     get_user_model()._default_manager.db_manager('default').create_superuser( \
     email='$DJANGO_SU_EMAIL', \
     username='$DJANGO_SU_USERNAME', \
-    first_name='$DJANGO_SU_FIRST_NAME', \
-    last_name='$DJANGO_SU_LAST_NAME', \
     password='$DJANGO_SU_PASSWORD')"
 
 exec "$@"
